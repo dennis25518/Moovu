@@ -8,8 +8,10 @@ import RegisterPage from "./pages/RegisterPage";
 import ServicePage from "./pages/ServicePage";
 
 function App() {
+  const basePath = import.meta.env.VITE_BASE_URL || "/";
+
   return (
-    <Router basename="/Moovu">
+    <Router basename={basePath}>
       <div className="min-h-screen bg-black">
         <Sidebar />
         <main className="ml-20">
