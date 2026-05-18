@@ -6,66 +6,71 @@ export default function StreamingSection() {
   const navigate = useNavigate();
 
   const assetBaseUrl = import.meta.env.BASE_URL || "/";
+  const normalizedAssetBaseUrl = assetBaseUrl.endsWith("/")
+    ? assetBaseUrl
+    : `${assetBaseUrl}/`;
+  const getAssetUrl = (assetName: string) =>
+    encodeURI(`${normalizedAssetBaseUrl}assets/${assetName}`);
 
   const streamingServices = [
     {
       id: "netflix",
       name: "Netflix",
-      logo: encodeURI(`${assetBaseUrl}assets/netflix.png`),
+      logo: getAssetUrl("netflix.png"),
       background: "bg-white",
     },
     {
       id: "prime",
       name: "Prime Video",
-      logo: encodeURI(`${assetBaseUrl}assets/prime video.png`),
+      logo: getAssetUrl("prime-video.png"),
       background: "bg-white",
     },
     {
       id: "disney",
       name: "Disney+",
-      logo: `${assetBaseUrl}assets/disneyplus.png`,
+      logo: getAssetUrl("disneyplus.png"),
       background: "bg-white",
     },
     {
       id: "hulu",
       name: "Hulu",
-      logo: `${assetBaseUrl}assets/hulu.png`,
+      logo: getAssetUrl("hulu.png"),
       background: "bg-white",
     },
     {
       id: "peacock",
       name: "Peacock",
-      logo: `${assetBaseUrl}assets/peacock.png`,
+      logo: getAssetUrl("peacock.png"),
       background: "bg-white",
     },
     {
       id: "appletv",
       name: "Apple TV+",
-      logo: `${assetBaseUrl}assets/appletv.png`,
+      logo: getAssetUrl("appletv.png"),
       background: "bg-white",
     },
     {
       id: "crunchyroll",
       name: "Crunchyroll",
-      logo: `${assetBaseUrl}assets/crunchyroll.png`,
+      logo: getAssetUrl("crunchyroll.png"),
       background: "bg-white",
     },
     {
       id: "paramount",
       name: "Paramount+",
-      logo: `${assetBaseUrl}assets/paramount.png`,
+      logo: getAssetUrl("paramount.png"),
       background: "bg-white",
     },
     {
       id: "amc",
       name: "AMC+",
-      logo: `${assetBaseUrl}assets/amcplus.jpg`,
+      logo: getAssetUrl("amcplus.jpg"),
       background: "bg-white",
     },
     {
       id: "starz",
       name: "Starz",
-      logo: `${assetBaseUrl}assets/starz.png`,
+      logo: getAssetUrl("starz.png"),
       background: "bg-white",
     },
   ];

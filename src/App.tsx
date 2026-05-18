@@ -8,7 +8,7 @@ import RegisterPage from "./pages/RegisterPage";
 import ServicePage from "./pages/ServicePage";
 
 function App() {
-  const basePath = import.meta.env.VITE_BASE_URL || "/";
+  const basePath = import.meta.env.BASE_URL || "/";
 
   return (
     <Router basename={basePath}>

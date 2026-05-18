@@ -39,7 +39,12 @@ export default function Sidebar() {
   };
 
   const assetBaseUrl = import.meta.env.BASE_URL || "/";
-  const logoUrl = encodeURI(`${assetBaseUrl}assets/Moove web nav.png`);
+  const normalizedAssetBaseUrl = assetBaseUrl.endsWith("/")
+    ? assetBaseUrl
+    : `${assetBaseUrl}/`;
+  const getAssetUrl = (assetName: string) =>
+    encodeURI(`${normalizedAssetBaseUrl}assets/${assetName}`);
+  const logoUrl = getAssetUrl("moove-web-nav.png");
 
   return (
     <>
