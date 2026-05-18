@@ -9,6 +9,7 @@ export interface Movie {
   backdrop_path: string | null;
   release_date: string;
   vote_average: number;
+  vote_count?: number;
   overview: string;
 }
 
@@ -128,6 +129,23 @@ export const getPopularMovies = () => fetchMovies("/movie/popular");
 export const getTopRatedMovies = () => fetchMovies("/movie/top_rated");
 
 export const getUpcomingMovies = () => fetchMovies("/movie/upcoming");
+
+export const getMoviesByProvider = async (
+  providerId: number,
+  region = "US",
+): Promise<Movie[]> => {
+  try {
+    const response = await fetch(
+      `${TMDB_BASE_URL}/discover/movie?api_key=${TMDB_API_KEY}&with_watch_providers=${providerId}&watch_region=${region}&sort_by=popularity.desc`,
+    );
+    if (!response.ok) throw new Error(`API error: ${response.status}`);
+    const data: MovieResponse = await response.json();
+    return data.results || [];
+  } catch (error) {
+    console.error("Error fetching movies by provider:", error);
+    return [];
+  }
+};
 
 export const searchMovies = async (query: string): Promise<Movie[]> => {
   if (!query.trim()) return [];

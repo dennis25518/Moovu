@@ -1,70 +1,34 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
 import {
   getTrendingMovies,
   getPopularMovies,
+  getTopRatedMovies,
   getUpcomingMovies,
-  getMovieImageUrl,
   type Movie,
 } from "../services/tmdbService";
-
-interface ContentItem {
-  id: number;
-  title: string;
-  image: string;
-  badge?: string;
-}
-
-interface Section {
-  title: string;
-  subtitle: string;
-  sectionLabel: string;
-  items: ContentItem[];
-}
+import MovieSection from "./MovieSection";
 
 export default function ContentSections() {
-  const [sections, setSections] = useState<Section[]>([]);
+  const [trendingMovies, setTrendingMovies] = useState<Movie[]>([]);
+  const [topRatedMovies, setTopRatedMovies] = useState<Movie[]>([]);
+  const [popularMovies, setPopularMovies] = useState<Movie[]>([]);
+  const [upcomingMovies, setUpcomingMovies] = useState<Movie[]>([]);
   const [loading, setLoading] = useState(true);
-  const navigate = useNavigate();
 
   useEffect(() => {
     const loadMovies = async () => {
       try {
-        const [trending, popular, upcoming] = await Promise.all([
+        const [trending, topRated, popular, upcoming] = await Promise.all([
           getTrendingMovies(),
+          getTopRatedMovies(),
           getPopularMovies(),
           getUpcomingMovies(),
         ]);
 
-        const formatMovies = (movies: Movie[], badge?: string): ContentItem[] =>
-          movies.slice(0, 7).map((movie) => ({
-            id: movie.id,
-            title: movie.title,
-            image: getMovieImageUrl(movie.poster_path),
-            badge,
-          }));
-
-        setSections([
-          {
-            title: "What to watch right now",
-            subtitle:
-              "Fresh seasons, new releases, and films that just left theatres.",
-            sectionLabel: "TRENDING THIS WEEK",
-            items: formatMovies(trending),
-          },
-          {
-            title: "From the theatre to your couch",
-            subtitle: "Cinema's biggest hits now streaming at home.",
-            sectionLabel: "MOST POPULAR",
-            items: formatMovies(popular),
-          },
-          {
-            title: "Coming Soon",
-            subtitle: "Upcoming releases you don't want to miss.",
-            sectionLabel: "UPCOMING RELEASES",
-            items: formatMovies(upcoming, "COMING SOON"),
-          },
-        ]);
+        setTrendingMovies(trending.slice(0, 20));
+        setTopRatedMovies(topRated.slice(0, 20));
+        setPopularMovies(popular.slice(0, 20));
+        setUpcomingMovies(upcoming.slice(0, 20));
       } catch (error) {
         console.error("Failed to load movies:", error);
       } finally {
@@ -87,81 +51,49 @@ export default function ContentSections() {
 
   return (
     <div className="w-full bg-black">
-      {sections.map((section, sectionIdx) => (
-        <section key={sectionIdx} className="w-full py-16 md:py-20 px-4">
-          <div className="max-w-7xl mx-auto">
-            {/* Section Header */}
-            <div className="mb-8 md:mb-12">
-              <div className="flex items-center gap-3 mb-4">
-                <div className="w-1 h-6 bg-white" />
-                <p className="text-xs md:text-sm font-bold text-gray-500 tracking-widest uppercase">
-                  {section.sectionLabel}
-                </p>
-              </div>
-              <h2 className="text-3xl md:text-4xl font-black text-white mb-3">
-                {section.title}
-              </h2>
-              <p className="text-gray-400 text-base md:text-lg">
-                {section.subtitle}
-              </p>
-            </div>
+      <div className="max-w-7xl mx-auto px-0">
+        {/* Trending Movies */}
+        <MovieSection
+          title="Trending Movies"
+          movies={trendingMovies}
+          type="movie"
+        />
 
-            {/* Content Grid - Horizontal Scroll */}
-            <div className="relative">
-              <div className="overflow-x-auto scrollbar-hide">
-                <div className="flex gap-4 md:gap-6 pb-4 min-w-max">
-                  {section.items.map((item) => (
-                    <button
-                      key={item.id}
-                      onClick={() => navigate(`/movie/${item.id}`)}
-                      className="group relative flex-shrink-0 w-40 md:w-48 cursor-pointer text-left hover:no-underline border-none bg-none p-0"
-                    >
-                      {/* Card Container */}
-                      <div className="relative overflow-hidden rounded-2xl aspect-[3/4] bg-gray-900 transition-transform duration-300 group-hover:scale-105">
-                        <img
-                          src={item.image}
-                          alt={item.title}
-                          className="w-full h-full object-cover"
-                          onError={(e) => {
-                            e.currentTarget.src =
-                              "https://picsum.photos/300/400?random=0";
-                          }}
-                        />
+        {/* Top 10 Movies This Week */}
+        <MovieSection
+          title="Top 10 Movies This Week"
+          movies={topRatedMovies}
+          type="movie"
+        />
 
-                        {/* Badge */}
-                        {item.badge && (
-                          <div className="absolute top-3 right-3 bg-red-600 text-white px-3 py-1 rounded-full text-xs font-bold">
-                            {item.badge}
-                          </div>
-                        )}
+        {/* Now Playing in Theaters */}
+        <MovieSection
+          title="Now Playing in Theaters"
+          movies={popularMovies}
+          type="movie"
+        />
 
-                        {/* Overlay */}
-                        <div className="absolute inset-0 bg-black/0 group-hover:bg-black/40 transition-colors duration-300" />
-                      </div>
+        {/* Asian TV Shows */}
+        <MovieSection
+          title="Asian TV Shows"
+          movies={upcomingMovies}
+          type="series"
+        />
 
-                      {/* Title */}
-                      <p className="mt-3 text-white font-semibold text-sm line-clamp-2">
-                        {item.title}
-                      </p>
-                    </button>
-                  ))}
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-      ))}
+        {/* Trending TV Shows */}
+        <MovieSection
+          title="Trending TV Shows"
+          movies={trendingMovies}
+          type="series"
+        />
 
-      {/* Custom Scrollbar Styles */}
-      <style>{`
-        .scrollbar-hide::-webkit-scrollbar {
-          display: none;
-        }
-        .scrollbar-hide {
-          -ms-overflow-style: none;
-          scrollbar-width: none;
-        }
-      `}</style>
+        {/* Top 10 Series This Week */}
+        <MovieSection
+          title="Top 10 Series This Week"
+          movies={topRatedMovies}
+          type="series"
+        />
+      </div>
     </div>
   );
 }

@@ -1,19 +1,73 @@
 import { useRef } from "react";
+import { useNavigate } from "react-router-dom";
 
 export default function StreamingSection() {
   const scrollRef = useRef<HTMLDivElement>(null);
+  const navigate = useNavigate();
+
+  const assetBaseUrl = import.meta.env.BASE_URL || "/";
 
   const streamingServices = [
-    { id: "netflix", name: "Netflix", color: "#E50914" },
-    { id: "prime", name: "Prime Video", color: "#146EB4" },
-    { id: "disney", name: "Disney+", color: "#113CCF" },
-    { id: "hulu", name: "Hulu", color: "#3DBB3D" },
-    { id: "peacock", name: "Peacock", color: "#564D4D" },
-    { id: "appletv", name: "Apple TV+", color: "#000000" },
-    { id: "crunchyroll", name: "Crunchyroll", color: "#F47522" },
-    { id: "paramount", name: "Paramount+", color: "#0064FF" },
-    { id: "amc", name: "AMC+", color: "#000000" },
-    { id: "starz", name: "Starz", color: "#DC143C" },
+    {
+      id: "netflix",
+      name: "Netflix",
+      logo: encodeURI(`${assetBaseUrl}assets/netflix.png`),
+      background: "bg-white",
+    },
+    {
+      id: "prime",
+      name: "Prime Video",
+      logo: encodeURI(`${assetBaseUrl}assets/prime video.png`),
+      background: "bg-white",
+    },
+    {
+      id: "disney",
+      name: "Disney+",
+      logo: `${assetBaseUrl}assets/disneyplus.png`,
+      background: "bg-white",
+    },
+    {
+      id: "hulu",
+      name: "Hulu",
+      logo: `${assetBaseUrl}assets/hulu.png`,
+      background: "bg-white",
+    },
+    {
+      id: "peacock",
+      name: "Peacock",
+      logo: `${assetBaseUrl}assets/peacock.png`,
+      background: "bg-white",
+    },
+    {
+      id: "appletv",
+      name: "Apple TV+",
+      logo: `${assetBaseUrl}assets/appletv.png`,
+      background: "bg-white",
+    },
+    {
+      id: "crunchyroll",
+      name: "Crunchyroll",
+      logo: `${assetBaseUrl}assets/crunchyroll.png`,
+      background: "bg-white",
+    },
+    {
+      id: "paramount",
+      name: "Paramount+",
+      logo: `${assetBaseUrl}assets/paramount.png`,
+      background: "bg-white",
+    },
+    {
+      id: "amc",
+      name: "AMC+",
+      logo: `${assetBaseUrl}assets/amcplus.jpg`,
+      background: "bg-white",
+    },
+    {
+      id: "starz",
+      name: "Starz",
+      logo: `${assetBaseUrl}assets/starz.png`,
+      background: "bg-white",
+    },
   ];
 
   return (
@@ -33,20 +87,18 @@ export default function StreamingSection() {
               {streamingServices.map((service) => (
                 <div
                   key={service.id}
-                  className="group relative flex-shrink-0 w-36 h-32 md:w-44 md:h-36 rounded-2xl overflow-hidden transition-all duration-300 hover:scale-105 cursor-pointer shadow-lg"
-                  style={{
-                    backgroundColor: service.color,
-                  }}
+                  onClick={() => navigate(`/service/${service.id}`)}
+                  className={`group relative flex-shrink-0 w-36 h-32 md:w-44 md:h-36 rounded-2xl overflow-hidden transition-all duration-300 hover:scale-105 cursor-pointer shadow-lg ${service.background} border border-slate-200`}
                 >
-                  <div className="absolute inset-0 bg-gradient-to-br from-white/20 to-transparent" />
-                  <div className="absolute inset-0 flex items-center justify-center">
-                    <div className="text-center">
-                      <p className="text-white font-bold text-lg md:text-xl text-center px-3">
-                        {service.name}
-                      </p>
-                    </div>
+                  <div className="absolute inset-0 bg-gradient-to-br from-transparent to-transparent" />
+                  <div className="absolute inset-0 flex items-center justify-center px-4">
+                    <img
+                      src={service.logo}
+                      alt={service.name}
+                      className="max-h-16 md:max-h-20 object-contain"
+                    />
                   </div>
-                  <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-all duration-300" />
+                  <div className="absolute inset-0 bg-black/0 group-hover:bg-black/15 transition-all duration-300" />
                 </div>
               ))}
             </div>
